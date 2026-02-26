@@ -71,6 +71,7 @@ ShowHelpCommand() {
 	echo "-h, --help                       Display available args command"
 	echo "-v, --version                    Check the qvmctl version"
 	echo "-kvm-check                       Check whether your VPS supports KVM Virtualization"
+	echo
 }
 
 ShowVncInfo() {
@@ -403,11 +404,12 @@ installationSummary() {
 				echo "3. VM RAM Size"
 				echo "4. VM CPU Core"
 				echo "5. VM Storage Size"
+				echo "6. Cancel the VM creation"
 				echo "0. Back to the Installation Summary"
 				echo
 
 				while true; do
-					read -p "Select the Menu (0-5): " menu_edit
+					read -p "Select the Menu (0-6): " menu_edit
 
 					case $menu_edit in
 						0)
@@ -565,6 +567,14 @@ installationSummary() {
 							done
 
 							installationSummary
+							break
+							;;
+						6)
+							echo
+							echo "Bye..."
+							echo
+							exit 0
+							
 							break
 							;;
 						*)
