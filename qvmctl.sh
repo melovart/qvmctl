@@ -21,6 +21,7 @@ set -e
 # ========== GLOBAL CONSTANTS ==========
 readonly INSTALLER_VERSION="1.0.0"
 
+readonly SERVICE_NAME="vm.service"
 readonly ISO_NAME="vm.iso"
 readonly IMG_NAME="vm.img"
 readonly DRIVER_NAME="virtio.iso"
@@ -71,6 +72,9 @@ ShowHelpCommand() {
 	echo "-h, --help                       Display available args command"
 	echo "-v, --version                    Check the qvmctl version"
 	echo "-kvm-check                       Check whether your VPS supports KVM Virtualization"
+	echo "-service-start                   Start the installation vm service"
+	echo "-service-stop                    Stop the installation vm service"
+	echo "-service-remove                  Remove the installation vm service"
 	echo
 }
 
@@ -98,7 +102,7 @@ ShowVncInfo() {
 	echo "└─ VirtIO Driver  : ${VM_PATH}/${DRIVER_NAME}"
 	echo
 	echo "• VM Service Status"
-	systemctl is-active --quiet vm.service && \
+	systemctl is-active --quiet $SERVICE_NAME && \
 		echo "└─ Status          : Running" || \
 		echo "└─ Status          : Stopped"
 	
@@ -145,6 +149,12 @@ projectVmPath() {
 
 	while true; do
 		read -p "Input a path (ex /var/vm): " vm_path
+
+		if [ "$vm_path" = "/" ]; then
+			echo "You can't put it in / directory"
+			echo
+			continue
+		fi
 
 		if [ -z "$vm_path" ]; then
 			echo "VM path set to /var/vm"
@@ -289,7 +299,7 @@ InstallationConfirm() {
 
         case $sctl_option in
             ""|y|Y)
-                cat <<EOF > /etc/systemd/system/vm.service
+                cat <<EOF > /etc/systemd/system/$SERVICE_NAME
 [Unit]
 Description=QEMU Virtual Machine
 After=network.target
@@ -319,9 +329,9 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-                systemctl daemon-reload
-                systemctl enable vm.service
-                systemctl start vm.service
+                sudo systemctl daemon-reload
+                sudo systemctl enable $SERVICE_NAME
+                sudo systemctl start $SERVICE_NAME
 
 				ShowVncInfo
 
@@ -380,8 +390,8 @@ installationSummary() {
 					case $install_now in
 						""|y|Y)
 							echo "Installing dependencies..."
-							apt update
-							apt install -y qemu-system-x86 qemu-utils qemu-kvm
+							sudo apt update
+							sudo apt install -y qemu-system-x86 qemu-utils qemu-kvm
 
 							InstallationConfirm
 							break
@@ -616,6 +626,55 @@ while [[ $# -gt 0 ]]; do
 			else
 				echo "KVM is Available on this VPS"
 				echo
+			fi
+			
+			exit 0
+			;;
+		-service-start)
+			if systemctl list-units --all --type=service | grep -q $SERVICE_NAME; then
+				echo "$SERVICE_NAME found, starting..."
+
+				sudo systemctl start $SERVICE_NAME
+				echo "Service $SERVICE_NAME running"
+			else
+				echo "You dont have $SERVICE_NAME service on your VPS"
+			fi
+			
+			exit 0
+			;;
+		-service-stop)
+			if systemctl list-units --all --type=service | grep -q $SERVICE_NAME; then
+				echo "$SERVICE_NAME found, stopping..."
+
+				sudo systemctl stop $SERVICE_NAME
+				echo "Service $SERVICE_NAME stopped"
+			else
+				echo "There are no services running on your VPS"
+			fi
+			
+			exit 0
+			;;
+		-service-remove)
+			if systemctl list-units --all --type=service | grep -q $SERVICE_NAME; then
+				echo "$SERVICE_NAME found, removing..."
+
+				sudo systemctl stop $SERVICE_NAME
+				sudo systemctl disable $SERVICE_NAME
+
+				if [ -f "/etc/systemd/system/$SERVICE_NAME" ]; then
+					sudo rm "/etc/systemd/system/$SERVICE_NAME"
+					echo "File /etc/systemd/system/$SERVICE_NAME has been removed"
+				elif [ -f "/lib/systemd/system/$SERVICE_NAME" ]; then
+					sudo rm "/lib/systemd/system/$SERVICE_NAME"
+					echo "File /lib/systemd/system/$SERVICE_NAME has been removed"
+				else
+					echo "Service file not found"
+				fi
+
+				sudo systemctl daemon-reload
+				echo "System Daemon successfully reloaded"
+			else
+				echo "There are no services running on your VPS"
 			fi
 			
 			exit 0
