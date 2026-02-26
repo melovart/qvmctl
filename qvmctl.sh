@@ -25,14 +25,6 @@ readonly ISO_NAME="vm.iso"
 readonly IMG_NAME="vm.img"
 readonly DRIVER_NAME="virtio.iso"
 
-readonly RESET="\033[0m"
-readonly BOLD="\033[1m"
-readonly WHITE="\033[97m"
-readonly RED="\033[91m"
-readonly YELLOW="\033[93m"
-readonly GREEN="\033[92m"
-readonly CYAN="\033[96m"
-
 # ========== RUNTIME VARIABLES ==========
 VM_PATH=""
 ISO_URI=""
@@ -43,33 +35,33 @@ VM_STORAGE=""
 
 installerPersonalization() {
 	clear
-	echo -e "$BOLD"
-	echo -e "   ██████╗ ${CYAN}██╗   ██╗███╗   ███╗${WHITE} ██████╗████████╗██╗     "
-	echo -e "  ██╔═══██╗${CYAN}██║   ██║████╗ ████║${WHITE}██╔════╝╚══██╔══╝██║     "
-	echo -e "  ██║   ██║${CYAN}██║   ██║██╔████╔██║${WHITE}██║        ██║   ██║     "
-	echo -e "  ██║▄▄ ██║${CYAN}╚██╗ ██╔╝██║╚██╔╝██║${WHITE}██║        ██║   ██║     "
-	echo -e "  ╚██████╔╝${CYAN} ╚████╔╝ ██║ ╚═╝ ██║${WHITE}╚██████╗   ██║   ███████╗"
-	echo -e "   ╚══▀▀═╝ ${CYAN}  ╚═══╝  ╚═╝     ╚═╝${WHITE} ╚═════╝   ╚═╝   ╚══════╝"
-	echo -e "$RESET $BOLD"
-	echo -e "       Quick Virtual Machine Control - by ${CYAN}melovart${WHITE}"
+	echo
+	echo "   ██████╗ ██╗   ██╗███╗   ███╗ ██████╗████████╗██╗     "
+	echo "  ██╔═══██╗██║   ██║████╗ ████║██╔════╝╚══██╔══╝██║     "
+	echo "  ██║   ██║██║   ██║██╔████╔██║██║        ██║   ██║     "
+	echo "  ██║▄▄ ██║╚██╗ ██╔╝██║╚██╔╝██║██║        ██║   ██║     "
+	echo "  ╚██████╔╝ ╚████╔╝ ██║ ╚═╝ ██║╚██████╗   ██║   ███████╗"
+	echo "   ╚══▀▀═╝   ╚═══╝  ╚═╝     ╚═╝ ╚═════╝   ╚═╝   ╚══════╝"
+	echo
+	echo "       Quick Virtual Machine Control - by melovart"
 	echo "                      Version ${INSTALLER_VERSION}"
-	echo -e "$RESET"
+	echo
 	echo
 	echo
 }
 
 showInstallerVersion() {
-	echo -e "$BOLD"
-	echo -e "   ██████╗ ${CYAN}██╗   ██╗███╗   ███╗${WHITE} ██████╗████████╗██╗     "
-	echo -e "  ██╔═══██╗${CYAN}██║   ██║████╗ ████║${WHITE}██╔════╝╚══██╔══╝██║     "
-	echo -e "  ██║   ██║${CYAN}██║   ██║██╔████╔██║${WHITE}██║        ██║   ██║     "
-	echo -e "  ██║▄▄ ██║${CYAN}╚██╗ ██╔╝██║╚██╔╝██║${WHITE}██║        ██║   ██║     "
-	echo -e "  ╚██████╔╝${CYAN} ╚████╔╝ ██║ ╚═╝ ██║${WHITE}╚██████╗   ██║   ███████╗"
-	echo -e "   ╚══▀▀═╝ ${CYAN}  ╚═══╝  ╚═╝     ╚═╝${WHITE} ╚═════╝   ╚═╝   ╚══════╝"
-	echo -e "$RESET $BOLD"
-	echo -e "       Quick Virtual Machine Control - by ${CYAN}melovart${WHITE}"
+	echo
+	echo "   ██████╗ ██╗   ██╗███╗   ███╗ ██████╗████████╗██╗     "
+	echo "  ██╔═══██╗██║   ██║████╗ ████║██╔════╝╚══██╔══╝██║     "
+	echo "  ██║   ██║██║   ██║██╔████╔██║██║        ██║   ██║     "
+	echo "  ██║▄▄ ██║╚██╗ ██╔╝██║╚██╔╝██║██║        ██║   ██║     "
+	echo "  ╚██████╔╝ ╚████╔╝ ██║ ╚═╝ ██║╚██████╗   ██║   ███████╗"
+	echo "   ╚══▀▀═╝   ╚═══╝  ╚═╝     ╚═╝ ╚═════╝   ╚═╝   ╚══════╝"
+	echo
+	echo "       Quick Virtual Machine Control - by melovart"
 	echo "                      Version ${INSTALLER_VERSION}"
-	echo -e "$RESET"
+	echo
 }
 
 ShowHelpCommand() {
@@ -106,8 +98,8 @@ ShowVncInfo() {
 	echo
 	echo "• VM Service Status"
 	systemctl is-active --quiet vm.service && \
-		echo -e "└─ Status          : ${GREEN}Running${RESET}" || \
-		echo -e "└─ Status          : ${YELLOW}Stopped${RESET}"
+		echo "└─ Status          : Running" || \
+		echo "└─ Status          : Stopped"
 	
 	echo
 	echo
@@ -136,7 +128,7 @@ CheckQemuDependencies() {
 	fi
 
 	if [ ${#missing_packages[@]} -eq 0 ]; then
-		echo -e "${GREEN}All QEMU dependencies are installed.${RESET}"
+		echo "All QEMU dependencies are installed"
 		return 0
 	else
 		echo -e "${YELLOW}Missing dependencies:${RESET}"
@@ -186,7 +178,7 @@ setVmRam() {
 	total_ram=$(grep MemTotal /proc/meminfo | awk '{print int($2/1024/1024)+1}')
 
 	echo
-	echo -e "Your VPS have ${GREEN}${total_ram}GB ${RESET}RAM available, input number only"
+	echo "Your VPS have ${total_ram}GB RAM available, input number only"
 
 	while true; do
 		read -p "Set VM RAM (ex 4): " vm_ram
@@ -214,7 +206,7 @@ setVmCpuCore() {
 	total_core=$(nproc)
 
 	echo
-	echo -e "Your VPS CPU have ${GREEN}${total_core} Core ${RESET}available, input number only"
+	echo "Your VPS CPU have ${total_core} Core available, input number only"
 
 	while true; do
 		read -p "Set VM CPU Core (ex 2): " vm_core
@@ -242,7 +234,7 @@ setVmStorage() {
 	free_storage=$(df --output=avail -BG / | tail -1 | sed 's/G//')
 
 	echo
-	echo -e "Your VPS have ${GREEN}${free_storage}GB ${RESET}Storage available, input number only"
+	echo "Your VPS have ${free_storage}GB Storage available, input number only"
 
 	while true; do
 		read -p "Set VM Storage (ex 80): " vm_storage
@@ -270,19 +262,19 @@ InstallationConfirm() {
     mkdir -p "$VM_PATH"
 
     if [ -f "${VM_PATH}/${ISO_NAME}" ]; then
-        echo -e "ISO ${YELLOW}$ISO_NAME ${RESET}already exists! Skipping download..."
+        echo "ISO $ISO_NAME already exists! Skipping download..."
     else
         wget "$ISO_URI" -O "${VM_PATH}/${ISO_NAME}"
     fi
 
     if [ -f "${VM_PATH}/${IMG_NAME}" ]; then
-        echo -e "Image ${YELLOW}$IMG_NAME ${RESET}already exists! Skipping creation..."
+        echo "Image $IMG_NAME already exists! Skipping creation..."
     else
         qemu-img create -f raw "${VM_PATH}/${IMG_NAME}" "${VM_STORAGE}G"
     fi
 
     if [ -f "${VM_PATH}/${DRIVER_NAME}" ]; then
-        echo -e "Driver ${YELLOW}$DRIVER_NAME ${RESET}already exists! Skipping download..."
+        echo "Driver $DRIVER_NAME already exists! Skipping download..."
     else
         wget "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.285-1/virtio-win-0.1.285.iso" \
             -O "${VM_PATH}/${DRIVER_NAME}"
@@ -426,8 +418,8 @@ installationSummary() {
 							clear
 							installerPersonalization
 
-							echo -e "You're wanted to change the ${YELLOW}ISO Url ${RESET}from the VM Installation"
-							echo -e "Your current ISO Url: ${YELLOW}$ISO_URI${RESET}"
+							echo "You're wanted to change the ISO Url from the VM Installation"
+							echo "Your current ISO Url: $ISO_URI"
 							echo
 
 							while true; do
@@ -450,8 +442,8 @@ installationSummary() {
 							clear
 							installerPersonalization
 
-							echo "You're wanted to change the ${YELLOW}VM Directory Path ${RESET}from the VM Installation"
-							echo "Your current VM Directory: ${YELLOW}$VM_PATH${RESET}"
+							echo "You're wanted to change the VM Directory Path from the VM Installation"
+							echo "Your current VM Directory: $VM_PATH"
 							echo
 
 							while true; do
@@ -476,9 +468,9 @@ installationSummary() {
 
 							total_ram=$(grep MemTotal /proc/meminfo | awk '{print int($2/1024/1024)+1}')
 
-							echo "You're wanted to change the ${YELLOW}VM RAM Size ${RESET}from the VM Installation"
-							echo -e "Your VPS have ${GREEN}${total_ram}GB ${RESET}RAM available, input number only"
-							echo "Your current VM RAM Size: ${YELLOW}$VM_RAM GB${RESET}"
+							echo "You're wanted to change the VM RAM Size from the VM Installation"
+							echo "Your VPS have ${total_ram}GB RAM available, input number only"
+							echo "Your current VM RAM Size: $VM_RAM GB"
 							echo
 
 							while true; do
@@ -511,9 +503,9 @@ installationSummary() {
 
 							total_core=$(nproc)
 
-							echo "You're wanted to change the ${YELLOW}VM CPU Core ${RESET}from the VM Installation"
-							echo -e "Your VPS CPU have ${GREEN}${total_core} Core ${RESET}available, input number only"
-							echo "Your current VM CPU: ${YELLOW}$VM_CORE Core${RESET}"
+							echo "You're wanted to change the VM CPU Core from the VM Installation"
+							echo "Your VPS CPU have ${total_core} Core available, input number only"
+							echo "Your current VM CPU: $VM_CORE Core"
 							echo
 
 							while true; do
@@ -546,9 +538,9 @@ installationSummary() {
 
 							free_storage=$(df --output=avail -BG / | tail -1 | sed 's/G//')
 
-							echo "You're wanted to change the ${YELLOW}VM Storage Size${RESET} from the VM Installation"
-							echo -e "Your VPS have ${GREEN}${free_storage}GB ${RESET}Storage available, input number only"
-							echo "Your current VM Storage Size: ${YELLOW}$VM_STORAGE GB${RESET}"
+							echo "You're wanted to change the VM Storage Size from the VM Installation"
+							echo "Your VPS have ${free_storage}GB Storage available, input number only"
+							echo "Your current VM Storage Size: $VM_STORAGE GB"
 							echo
 
 							while true; do
@@ -602,16 +594,18 @@ while [[ $# -gt 0 ]]; do
 			;;
 		-kvm-check)
 			if ! grep -E -q '(vmx|svm)' /proc/cpuinfo; then
-				echo "CPU virtualization is ${RED}NOT Supported${RESET}"
+				echo "CPU virtualization is NOT Supported"
 			else
-				echo "CPU virtualization is ${GREEN}Supported${RESET}"
+				echo "CPU virtualization is Supported"
 			fi
 
 			if [ ! -e /dev/kvm ]; then
-				echo "KVM is ${RED}NOT Available ${RESET}on this VPS"
+				echo "KVM is NOT Available on this VPS"
 				echo "This VPS is likely OpenVZ / LXC / no-nested-virt"
+				echo
 			else
-				echo "KVM is ${GREEN}Available ${RESET}on this VPS"
+				echo "KVM is Available on this VPS"
+				echo
 			fi
 			
 			exit 0
