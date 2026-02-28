@@ -32,4 +32,4 @@ chmod +x qvmctl.sh
 
 ---
 
-If you don't know how my script works, maybe you can watch my [video](https://youtube.com) at YouTube
+If you don't know how my script works, maybe you can watch my [video](https://youtu.be/s17swdiaCfw?si=Bv0ROriP_QxuU9QC) at YouTube
